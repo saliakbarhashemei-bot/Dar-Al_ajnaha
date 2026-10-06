@@ -1,0 +1,1 @@
+function e(e,t){if(!e)return`-`;let n=new Date(e);if(Number.isNaN(n.getTime()))return e;try{return new Intl.DateTimeFormat(t===`fa`?`fa-IR`:`en-US`,{dateStyle:`medium`}).format(n)}catch{return e}}export{e as t};

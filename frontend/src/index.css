@@ -1,0 +1,415 @@
+:root {
+  --text: #1f2933;
+  --text-muted: #52606d;
+  --bg: #ffffff;
+  --surface: #f7f8fa;
+  --border: #d7dbe0;
+  --accent: #1f6feb;
+  --accent-contrast: #ffffff;
+  --danger: #b42318;
+  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --mono: ui-monospace, Consolas, monospace;
+  --radius: 6px;
+  --space: 12px;
+
+  font: 16px/1.5 var(--sans);
+  color: var(--text);
+  background: var(--bg);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --text: #e4e7eb;
+    --text-muted: #9aa5b1;
+    --bg: #16171d;
+    --surface: #1f2028;
+    --border: #2e303a;
+    --accent: #539bf5;
+    --accent-contrast: #0b1220;
+    --danger: #f97066;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  /* Never center: alignment must follow the document direction. */
+  text-align: start;
+}
+
+/* Auto-detect text direction for user input (Persian/English mixed content). */
+input,
+textarea {
+  unicode-bidi: plaintext;
+}
+
+#root {
+  min-height: 100svh;
+}
+
+/* ---------------------------------------------------------------------------
+   App shell: sidebar + content.
+   The sidebar is the first flex child, so `direction: rtl` moves it to the
+   right-hand side automatically. No physical left/right anywhere.
+   --------------------------------------------------------------------------- */
+
+.app-shell {
+  display: flex;
+  min-height: 100svh;
+}
+
+.sidebar {
+  flex: 0 0 auto;
+  inline-size: 232px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space);
+  padding: calc(var(--space) * 1.5);
+  background: var(--surface);
+  border-inline-end: 1px solid var(--border);
+}
+
+.sidebar__brand {
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--text-h);
+  padding-block-end: var(--space);
+  border-block-end: 1px solid var(--border);
+}
+
+.sidebar__nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sidebar__link {
+  display: block;
+  padding: 8px 10px;
+  border-radius: var(--radius);
+  color: var(--text);
+  text-decoration: none;
+}
+
+.sidebar__link:hover {
+  background: var(--accent-bg);
+  color: var(--accent);
+}
+
+/* Active route marker sits on the inline-start edge in both directions. */
+.sidebar__link--active {
+  background: var(--accent-bg);
+  color: var(--accent);
+  font-weight: 600;
+  box-shadow: inset 3px 0 0 0 var(--accent);
+}
+
+[dir='rtl'] .sidebar__link--active {
+  box-shadow: inset -3px 0 0 0 var(--accent);
+}
+
+.app-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: var(--space);
+  padding: var(--space) calc(var(--space) * 2);
+  border-block-end: 1px solid var(--border);
+  background: var(--bg);
+}
+
+.topbar__actions {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--space) / 2);
+  margin-inline-start: auto;
+}
+
+.topbar__user {
+  color: var(--text-muted);
+  padding-inline-end: calc(var(--space) / 2);
+}
+
+.topbar__nav-toggle {
+  display: none;
+  font-size: 18px;
+  line-height: 1;
+  padding: 6px 10px;
+}
+
+.lang-switch {
+  display: inline-flex;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.lang-switch button {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  padding: 6px 10px;
+}
+
+.lang-switch button[aria-pressed='true'] {
+  background: var(--accent);
+  color: var(--accent-contrast);
+}
+
+.content {
+  flex: 1;
+  inline-size: 100%;
+  max-inline-size: 1200px;
+  margin-inline: auto;
+  padding: calc(var(--space) * 2);
+}
+
+@media (max-width: 860px) {
+  .app-shell {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    inline-size: 100%;
+    border-inline-end: 0;
+    border-block-end: 1px solid var(--border);
+  }
+
+  /* Collapsed by default on narrow screens; the topbar toggle reveals it. */
+  .sidebar__nav {
+    display: none;
+  }
+
+  .app-shell--nav-open .sidebar__nav {
+    display: flex;
+  }
+
+  .topbar__nav-toggle {
+    display: inline-block;
+  }
+}
+
+/* Dashboard stat cards */
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: var(--space);
+  margin-block-start: var(--space);
+}
+
+.stat-card {
+  display: block;
+  padding: var(--space);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: inherit;
+  text-decoration: none;
+}
+
+a.stat-card:hover {
+  border-color: var(--accent);
+}
+
+.stat-card__label {
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.stat-card__value {
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--text-h);
+}
+
+.status-line {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--space) / 2);
+  color: var(--text-muted);
+}
+
+.status-dot {
+  inline-size: 10px;
+  block-size: 10px;
+  border-radius: 50%;
+  background: var(--text-muted);
+}
+
+.status-dot--ok {
+  background: #16a34a;
+}
+
+.status-dot--error {
+  background: var(--danger);
+}
+
+h1 {
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0 0 var(--space);
+}
+
+h2 {
+  font-size: 19px;
+  font-weight: 600;
+  margin: calc(var(--space) * 2) 0 var(--space);
+}
+
+h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin: var(--space) 0 calc(var(--space) / 2);
+}
+
+p {
+  margin: 0 0 calc(var(--space) / 2);
+}
+
+ul {
+  margin: 0;
+  padding-inline-start: calc(var(--space) * 1.5);
+}
+
+img {
+  max-inline-size: 100%;
+  block-size: auto;
+}
+
+header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space);
+  padding: var(--space) calc(var(--space) * 2);
+  border-block-end: 1px solid var(--border);
+  background: var(--surface);
+}
+
+header > span:first-child {
+  font-weight: 700;
+}
+
+header nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space);
+}
+
+header > div {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--space) / 2);
+  margin-inline-start: auto;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+
+  &:focus-visible,
+  a:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space);
+  max-inline-size: 560px;
+  margin-block-start: var(--space);
+}
+
+form > div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+label {
+  color: var(--text-muted);
+}
+
+input,
+select,
+textarea {
+  inline-size: 100%;
+  padding: 6px 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg);
+}
+
+table {
+  inline-size: 100%;
+  border-collapse: collapse;
+  margin-block-start: var(--space);
+}
+
+th,
+td {
+  padding: 8px;
+  border-block-end: 1px solid var(--border);
+  text-align: start;
+  vertical-align: top;
+}
+
+th {
+  color: var(--text-muted);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+[role='alert'] {
+  padding: 8px 12px;
+  border-inline-start: 3px solid var(--danger);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--danger);
+}

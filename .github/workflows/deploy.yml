@@ -1,0 +1,30 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+
+jobs:
+  deploy-staging:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+      - uses: actions/checkout@v4
+      # SSH deploy or webhook trigger to staging server
+      # Run migrations: php artisan migrate --force
+      # Restart PHP-FPM / Octane workers
+      # Clear caches: php artisan optimize:clear && php artisan optimize
+      # Frontend: build and rsync to web root
+      - run: echo "Deploy to staging (configure SSH/webhook per docs/operations.md)"
+
+  deploy-production:
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    environment: production
+    needs: deploy-staging
+    steps:
+      - uses: actions/checkout@v4
+      # Similar to staging but with production secrets
+      - run: echo "Deploy to production (configure SSH/webhook per docs/operations.md)"
